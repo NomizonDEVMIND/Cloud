@@ -31,21 +31,26 @@ public class StartBungee {
         String cmd = "java -jar \"" + System.getProperty("user.dir") + "\\bungee//BungeeCord.jar\"";
         try {
             if(EPOLL){
-                Process process =
-                        new ProcessBuilder(new String[] {"bash", "-c", "java -jar BungeeCord.jar"})
-                                .redirectErrorStream(true)
-                                .directory(new File("bungee"))
-                                .start();
+                try {
+                    ProcessBuilder pb = new ProcessBuilder(new String[] {"bash", "-c", "java -jar BungeeCord.jar"})
+                            .redirectErrorStream(true)
+                            .directory(new File("bungee"));
+                    process = pb.start();
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
             }else{
-                process =
-                        new ProcessBuilder(new String[] {"cmd.exe", "/c", "java -jar BungeeCord.jar"})
-                                .redirectErrorStream(true)
-                                .directory(new File("bungee"))
-                                .start();
+               try {
+                   ProcessBuilder pb = new ProcessBuilder(new String[] {"cmd.exe", "/c", "java -jar BungeeCord.jar"})
+                           .redirectErrorStream(true)
+                           .directory(new File("bungee"));
+                   process = pb.start();
+               }catch (Exception ex){
+                   ex.printStackTrace();
+               }
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
+        } finally {
             System.err.println("Cannot start Bungeecord!");
             System.err.println("BungeeCord.jar is missing!");
             try {
