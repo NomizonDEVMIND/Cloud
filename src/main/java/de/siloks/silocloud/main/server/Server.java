@@ -95,6 +95,8 @@ public class Server {
             System.out.println("Server/Computer: "+cIP);
             System.out.println("==================================================");
             System.out.println("Cloud started!");
+            System.out.println("Use 'bungee' to stop the bungee");
+            System.out.println("Use 'exit' to stop the cloud");
             System.out.println("==================================================");
             StartBungee.start();
 
@@ -115,9 +117,13 @@ public class Server {
                             System.out.println(" ");
                         }
                         System.out.println("Stopping Cloud...");
+                        StartBungee.process.destroy();
                         System.exit(0);
                         System.out.println("Cloud stopped!");
                     }
+                }else if(line.equalsIgnoreCase("bungee")){
+                    StartBungee.process.destroy();
+                    System.out.println("Proxy killed! ["+StartBungee.process.waitFor()+"]");
                 }
             }
         } finally {

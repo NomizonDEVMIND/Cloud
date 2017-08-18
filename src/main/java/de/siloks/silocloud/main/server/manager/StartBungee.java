@@ -15,6 +15,7 @@ import java.net.URLConnection;
 public class StartBungee {
 
     public static boolean EPOLL = Epoll.isAvailable();
+    public static Process process;
 
     public static void start(){
         System.out.println("Starting bungeecord!");
@@ -27,12 +28,21 @@ public class StartBungee {
                 System.out.println("Cannot download BungeeCord.jar!");
             }
         }
-        String cmd = "java -jar BungeeCord.jar";
+        String cmd = "java -jar \"" + System.getProperty("user.dir") + "\\bungee//BungeeCord.jar\"";
         try {
-            Process p = null;
-            ProcessBuilder pb = new ProcessBuilder(cmd);
-            pb.directory(new File("bungee/"));
-            p = pb.start();
+            if(EPOLL){
+                Process process =
+                        new ProcessBuilder(new String[] {"bash", "-c", "java -jar BungeeCord.jar"})
+                                .redirectErrorStream(true)
+                                .directory(new File("bungee"))
+                                .start();
+            }else{
+                process =
+                        new ProcessBuilder(new String[] {"cmd.exe", "/c", "java -jar BungeeCord.jar"})
+                                .redirectErrorStream(true)
+                                .directory(new File("bungee"))
+                                .start();
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
