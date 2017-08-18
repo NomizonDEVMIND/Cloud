@@ -27,10 +27,11 @@ public class StartBungee {
                 System.out.println("Cannot download BungeeCord.jar!");
             }
         }
-        String cmd = "java -jar bungee/bungee/BungeeCord.jar";
+        String cmd = "java -jar BungeeCord.jar";
         try {
             Process p = null;
             ProcessBuilder pb = new ProcessBuilder(cmd);
+            pb.directory(new File("bungee/"));
             p = pb.start();
 
         } catch (IOException e) {
