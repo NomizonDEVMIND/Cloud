@@ -1,5 +1,7 @@
 package de.siloks.silocloud.main.server.manager;
 
+import io.netty.channel.epoll.Epoll;
+
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -12,6 +14,8 @@ import java.net.URLConnection;
  */
 public class StartBungee {
 
+    public static boolean EPOLL = Epoll.isAvailable();
+
     public static void start(){
         System.out.println("Starting bungeecord!");
         File dir = new File("bungee");
@@ -23,11 +27,10 @@ public class StartBungee {
                 System.out.println("Cannot download BungeeCord.jar!");
             }
         }
-        String cmd = "java -jar BungeeCord.jar";
+        String cmd = "java -jar bungee/bungee/BungeeCord.jar";
         try {
             Process p = null;
             ProcessBuilder pb = new ProcessBuilder(cmd);
-            pb.directory(new File("bungee/"));
             p = pb.start();
 
         } catch (IOException e) {
@@ -37,7 +40,7 @@ public class StartBungee {
             try {
                 download(new URL("http://nomizon.de/download/silocloud/bungee.jar"), "bungee/", "BungeeCord.jar");
             } catch (MalformedURLException e1) {
-                e.printStackTrace();
+                e1.printStackTrace();
             }
         }
     }
