@@ -23,7 +23,7 @@ public class StartBungee {
                 System.out.println("Cannot download BungeeCord.jar!");
             }
         }
-        String cmd = "java -jar bungee/BungeeCord.jar";
+        String cmd = "java -jar BungeeCord.jar";
         try {
             Process p = null;
             ProcessBuilder pb = new ProcessBuilder(cmd);
@@ -31,11 +31,14 @@ public class StartBungee {
             p = pb.start();
 
         } catch (IOException e) {
+            e.printStackTrace();
             System.err.println("Cannot start Bungeecord!");
             System.err.println("BungeeCord.jar is missing!");
             try {
                 download(new URL("http://nomizon.de/download/silocloud/bungee.jar"), "bungee/", "BungeeCord.jar");
-            } catch (MalformedURLException e1) {}
+            } catch (MalformedURLException e1) {
+                e.printStackTrace();
+            }
         }
     }
 
