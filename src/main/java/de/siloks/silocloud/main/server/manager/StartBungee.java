@@ -23,9 +23,13 @@ public class StartBungee {
                 System.out.println("Cannot download BungeeCord.jar!");
             }
         }
-        String cmd = "java -jar \"" + System.getProperty("user.dir") + "\\bungee//BungeeCord.jar\"";
+        String cmd = "java -jar \"" + "bungee/BungeeCord.jar";
         try {
-            Runtime.getRuntime().exec(cmd);
+            Process p = null;
+            ProcessBuilder pb = new ProcessBuilder(cmd);
+            pb.directory(new File("bungee/"));
+            p = pb.start();
+
         } catch (IOException e) {
             System.err.println("Cannot start Bungeecord!");
             System.err.println("BungeeCord.jar is missing!");
