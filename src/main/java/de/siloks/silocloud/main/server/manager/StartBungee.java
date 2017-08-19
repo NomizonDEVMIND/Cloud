@@ -1,6 +1,7 @@
 package de.siloks.silocloud.main.server.manager;
 
 import io.netty.channel.epoll.Epoll;
+import jdk.nashorn.internal.runtime.regexp.joni.encoding.CharacterType;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -19,46 +20,57 @@ public class StartBungee {
 
     public static void start(){
         System.out.println("Starting bungeecord!");
-        File dir = new File("bungee");
-        if(!dir.exists()){
-            dir.mkdirs();
-            try {
-                download(new URL("http://nomizon.de/download/silocloud/bungee.jar"), "bungee/", "BungeeCord.jar");
-            } catch (MalformedURLException e) {
-                System.out.println("Cannot download BungeeCord.jar!");
-            }
-        }
-        String cmd = "java -jar \"" + System.getProperty("user.dir") + "\\bungee//BungeeCord.jar\"";
+        long ram = 1024;
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String line;
+        System.out.println("Starting proxy with _____MB ram");
         try {
-            if(EPOLL){
-                try {
-                    ProcessBuilder pb = new ProcessBuilder(new String[] {"bash", "-c", "java -jar BungeeCord.jar"})
-                            .redirectErrorStream(true)
-                            .directory(new File("bungee"));
-                    process = pb.start();
-                }catch (Exception ex){
-                    ex.printStackTrace();
-                }
-            }else{
-               try {
-                   ProcessBuilder pb = new ProcessBuilder(new String[] {"cmd.exe", "/c", "java -jar BungeeCord.jar"})
-                           .redirectErrorStream(true)
-                           .directory(new File("bungee"));
-                   process = pb.start();
-               }catch (Exception ex){
-                   ex.printStackTrace();
-               }
-            }
+            while ((line = reader.readLine()) != null){
+                    if(isNumber(line)){
+                        ram = Long.parseLong(line);
+                    }
+                    if(ram >= 1024) {
+                        File dir = new File("bungee");
+                        File direc = new File("bungee/plugins");
+                        if(!dir.exists()){
+                            dir.mkdirs();
+                            direc.mkdirs();
+                            try {
+                                download(new URL("http://nomizon.de/download/silocloud/SiloCord-1.0-SNAPSHOT.jar"), "bungee/plugins/", "SiloCord.jar");
+                                download(new URL("http://nomizon.de/download/silocloud/bungee.jar"), "bungee/", "BungeeCord.jar");
+                            } catch (MalformedURLException e) {
+                                System.out.println("Cannot download BungeeCord.jar!");
+                            }
+                        }
+                        try {
+                            String starter = "java -jar BungeeCord.jar -Xms 216 -Xmx "+ram;
+                            if(EPOLL){
+                                ProcessBuilder pb = new ProcessBuilder(new String[] {"bash", "-c", starter})
+                                        .redirectErrorStream(true)
+                                        .directory(new File("bungee/"));
+                                process = pb.start();
+                            }else{
+                                ProcessBuilder pb = new ProcessBuilder(new String[] {"cmd.exe", "/c", starter})
+                                        .redirectErrorStream(true)
+                                        .directory(new File("bungee/"));
+                                process = pb.start();
+                            }
 
-        } finally {
-            System.err.println("Cannot start Bungeecord!");
-            System.err.println("BungeeCord.jar is missing!");
-            try {
-                download(new URL("http://nomizon.de/download/silocloud/bungee.jar"), "bungee/", "BungeeCord.jar");
-            } catch (MalformedURLException e1) {
-                e1.printStackTrace();
+                        } catch (Exception ex){
+                            System.err.println("Cannot start Bungeecord!");
+                            System.err.println("BungeeCord.jar is missing!");
+                            ex.printStackTrace();
+                            try {
+                                download(new URL("http://nomizon.de/download/silocloud/bungee.jar"), "bungee/", "BungeeCord.jar");
+                            } catch (MalformedURLException e1) {
+                                e1.printStackTrace();
+                            }
+                        }
+                    }else{
+                        System.err.println("Please use more than 1024MB!");
+                    }
             }
-        }
+        } catch (IOException e) {}
     }
 
     public static void download(URL url, String path, String name){
@@ -78,6 +90,15 @@ public class StartBungee {
             System.out.println("Download finished!");
         } catch (IOException e) {
 
+        }
+    }
+
+    public static boolean isNumber(String input){
+        try {
+            long tester = Long.parseLong(input);
+            return true;
+        }catch (NumberFormatException ex){
+            return false;
         }
     }
 

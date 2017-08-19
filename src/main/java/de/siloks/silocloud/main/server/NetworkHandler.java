@@ -16,6 +16,9 @@ public class NetworkHandler extends SimpleChannelInboundHandler<String> {
 
     @Override
     protected void messageReceived(ChannelHandlerContext ctx, String message) throws Exception {
-
+        String[] msg = message.split("|");
+        if(msg[0].equalsIgnoreCase("BungeeCord")){
+            System.out.println("BungeeCord told -> "+msg[1]);
+        }
     }
 }

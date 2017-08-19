@@ -83,7 +83,7 @@ public class Server {
                     .childHandler(new ChannelInitializer<Channel>() {
                         protected void initChannel(Channel channel) throws Exception {
                             channel.pipeline().addLast(new StringDecoder(StandardCharsets.UTF_8)).addLast(new StringEncoder(StandardCharsets.UTF_8)).addLast(new NetworkHandler());
-                            System.out.println("Channel (Wrapper) connected -> "+channel);
+                            System.out.println("Channel connected -> "+channel);
                         }
 
                     }).bind(cloudport).sync().channel();
