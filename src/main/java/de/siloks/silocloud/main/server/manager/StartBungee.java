@@ -18,18 +18,11 @@ public class StartBungee {
     public static boolean EPOLL = Epoll.isAvailable();
     public static Process process;
 
-    public static void start(){
-        System.out.println("Starting bungeecord!");
-        long ram = 1024;
+    public static void start(long ram){
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
         String line;
-        System.out.println("Starting proxy with _____MB ram");
+        System.out.println("Starting proxy with "+ram+"MB ram");
         try {
-            while ((line = reader.readLine()) != null){
-                    if(isNumber(line)){
-                        ram = Long.parseLong(line);
-                    }
-                    if(ram >= 1024) {
                         File dir = new File("bungee");
                         File direc = new File("bungee/plugins");
                         if(!dir.exists()){
@@ -66,11 +59,7 @@ public class StartBungee {
                                 e1.printStackTrace();
                             }
                         }
-                    }else{
-                        System.err.println("Please use more than 1024MB!");
-                    }
-            }
-        } catch (IOException e) {}
+        } catch (Exception e) {}
     }
 
     public static void download(URL url, String path, String name){

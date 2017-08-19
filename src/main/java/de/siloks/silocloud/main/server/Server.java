@@ -32,6 +32,7 @@ public class Server {
     public static int wrapperport;
     public static String IPAdress;
     public static String cIP;
+    public static boolean proxyStarted = false;
 
     public Server() throws Exception{
         for (int i = 0; i < 250; i++){
@@ -83,13 +84,12 @@ public class Server {
                     .childHandler(new ChannelInitializer<Channel>() {
                         protected void initChannel(Channel channel) throws Exception {
                             channel.pipeline().addLast(new StringDecoder(StandardCharsets.UTF_8)).addLast(new StringEncoder(StandardCharsets.UTF_8)).addLast(new NetworkHandler());
-                            System.out.println("Channel connected -> "+channel);
                         }
 
                     }).bind(cloudport).sync().channel();
             System.out.println("==================================================");
             System.out.println("Collected this data:");
-            System.out.println("IP-Adress: "+IPAdress);
+            System.out.println("Local-Adress: "+IPAdress);
             System.out.println("Cloudport: "+cloudport);
             System.out.println("Wrapperport: "+wrapperport);
             System.out.println("Server/Computer: "+cIP);
@@ -98,7 +98,9 @@ public class Server {
             System.out.println("Use 'bungee' to stop the bungee");
             System.out.println("Use 'exit' to stop the cloud");
             System.out.println("==================================================");
-            StartBungee.start();
+            System.out.println(" ");
+            System.out.println("How much ram is the proxy using maximal? (MB)");
+            System.out.println("Use 'proxy [Ram]'");
 
             BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
             String line;
@@ -124,6 +126,19 @@ public class Server {
                 }else if(line.equalsIgnoreCase("bungee")){
                     StartBungee.process.destroy();
                     System.out.println("Proxy killed! ["+StartBungee.process.waitFor()+"]");
+                }else if(line.startsWith("proxy")){
+                    if(proxyStarted == false){
+                        String[] args = line.split(" ");
+                        if(args.length == 2){
+                            proxyStarted = true;
+                            StartBungee.start(Long.parseLong(args[1]));
+                        }else{
+                            System.out.println("How much ram is the proxy using maximal? (MB)");
+                            System.out.println("Use 'proxy [Ram]'");
+                        }
+                    }else{
+                        System.err.println("Proxy already started!");
+                    }
                 }
             }
         } finally {
