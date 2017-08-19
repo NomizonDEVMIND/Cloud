@@ -17,6 +17,7 @@ import java.io.*;
 import java.net.Inet4Address;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Erstellt von Lars am 18.08.2017.
@@ -119,13 +120,18 @@ public class Server {
                             System.out.println(" ");
                         }
                         System.out.println("Stopping Cloud...");
-                        StartBungee.process.destroy();
+                        if(StartBungee.process.isAlive()){
+                            StartBungee.process.destroy();
+                        }else{
+                            StartBungee.process.destroy();
+                        }
                         System.exit(0);
                         System.out.println("Cloud stopped!");
                     }
                 }else if(line.equalsIgnoreCase("bungee")){
                     StartBungee.process.destroy();
-                    System.out.println("Proxy killed! ["+StartBungee.process.waitFor()+"]");
+                    StartBungee.process.waitFor();
+                    System.out.println("Proxy killed!");
                 }else if(line.startsWith("proxy")){
                     if(proxyStarted == false){
                         String[] args = line.split(" ");
